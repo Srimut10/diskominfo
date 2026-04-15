@@ -1,0 +1,4 @@
+# Cegah eksekusi PHP di folder uploads
+php_flag engine off
+Options -ExecCGI
+AddHandler cgi-script .php .php3 .php4 .phtml .pl .py .jsp .asp .sh .cgi
