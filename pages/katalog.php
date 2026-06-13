@@ -1,62 +1,82 @@
 <?php
 require_once '../includes/header.php';
 
-// Filter kategori
-$kat_id = isset($_GET['kategori']) ? (int)$_GET['kategori'] : 0;
-$search = trim($_GET['q'] ?? '');
+$tema_filter = isset($_GET['tema']) ? (int)$_GET['tema'] : 0;
+$search      = trim($_GET['q'] ?? '');
 
-// Hitung per kategori
-$kat_result = $conn->query("SELECT k.*, COUNT(m.id) as total FROM kategori k LEFT JOIN modul m ON m.kategori_id = k.id AND m.status='published' GROUP BY k.id");
-$kategori_list = $kat_result->fetch_all(MYSQLI_ASSOC);
+$has_tema = $conn->query("SHOW COLUMNS FROM modul LIKE 'tema_id'")->num_rows > 0;
+
+// Tema list untuk filter
+$tema_list = $conn->query("SELECT id, judul FROM tema_pelatihan WHERE status='open' ORDER BY judul")->fetch_all(MYSQLI_ASSOC);
 
 // Query modul
-$where = ["m.status = 'published'"];
+$where  = ["m.status = 'published'"];
 $params = []; $types = '';
-if ($kat_id > 0) { $where[] = "m.kategori_id = ?"; $params[] = $kat_id; $types .= 'i'; }
 if ($search) { $where[] = "m.judul LIKE ?"; $params[] = "%$search%"; $types .= 's'; }
+if ($tema_filter > 0 && $has_tema) {
+    $any = $conn->query("SELECT COUNT(*) as c FROM modul WHERE tema_id=$tema_filter AND status='published'")->fetch_assoc()['c'];
+    if ($any > 0) { $where[] = "m.tema_id = ?"; $params[] = $tema_filter; $types .= 'i'; }
+}
 
-$sql = "SELECT m.*, k.nama as kategori_nama FROM modul m LEFT JOIN kategori k ON m.kategori_id = k.id WHERE " . implode(' AND ', $where) . " ORDER BY m.created_at DESC";
+$join_tema = $has_tema ? "LEFT JOIN tema_pelatihan tp ON m.tema_id = tp.id" : "";
+$sel_tema  = $has_tema ? ", tp.id as tema_id, tp.judul as tema_judul, tp.status as tema_status" : ", NULL as tema_id, NULL as tema_judul, NULL as tema_status";
+
+$sql = "SELECT m.* $sel_tema FROM modul m $join_tema
+        WHERE " . implode(' AND ', $where) . " ORDER BY m.created_at DESC";
 $stmt = $conn->prepare($sql);
 if ($params) $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $moduls = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-function badge_class($kat) {
-    $map = ['Internal' => 'badge-internal', 'Kegiatan' => 'badge-kegiatan', 'External' => 'badge-external'];
-    return $map[$kat] ?? 'badge-internal';
-}
-
-// Hitung total semua
 $total_all = $conn->query("SELECT COUNT(*) as c FROM modul WHERE status='published'")->fetch_assoc()['c'];
 ?>
 <div class="main-content">
 <div class="katalog-layout">
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <h3>&#9776; Kategori</h3>
+        <div class="filter-header" onclick="toggleFilter()">
+            <h3>Filter</h3>
+            <span class="filter-toggle-icon" id="filter-icon">&#8963;</span>
+        </div>
+        <div class="filter-body" id="filter-body">
         <form method="GET">
             <input type="text" name="q" class="sidebar-search" placeholder="Cari modul..." value="<?= htmlspecialchars($search) ?>">
-            <ul class="filter-list">
+
+            <ul class="filter-list" style="margin-bottom:16px">
                 <li>
-                    <a href="katalog.php<?= $search ? '?q='.urlencode($search) : '' ?>" class="<?= $kat_id == 0 ? 'active' : '' ?>">
-                        Semua <span class="filter-count"><?= $total_all ?></span>
+                    <a href="katalog.php<?= $search?'?q='.urlencode($search):'' ?>" class="<?= $tema_filter==0?'active':'' ?>">
+                        Semua Modul <span class="filter-count"><?= $total_all ?></span>
                     </a>
                 </li>
-                <?php foreach ($kategori_list as $k): ?>
+            </ul>
+
+            <?php if (!empty($tema_list)): ?>
+            <div style="font-size:12px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Tema Pelatihan</div>
+            <ul class="filter-list">
+                <?php foreach ($tema_list as $t): ?>
                 <li>
-                    <a href="katalog.php?kategori=<?= $k['id'] ?><?= $search ? '&q='.urlencode($search) : '' ?>" class="<?= $kat_id == $k['id'] ? 'active' : '' ?>">
-                        <?= htmlspecialchars($k['nama']) ?> <span class="filter-count"><?= $k['total'] ?></span>
+                    <a href="katalog.php?tema=<?= $t['id'] ?><?= $search?'&q='.urlencode($search):'' ?>" class="<?= $tema_filter==$t['id']?'active':'' ?>">
+                        <?= htmlspecialchars($t['judul']) ?>
                     </a>
                 </li>
                 <?php endforeach; ?>
             </ul>
+            <?php endif; ?>
         </form>
+        </div>
     </aside>
 
     <!-- KONTEN -->
     <div class="katalog-content">
         <h2>Katalog Modul Pelatihan</h2>
-        <p>Temukan dan ikuti pelatihan yang tersedia</p>
+        <p>Temukan dan ikuti pelatihan yang tersedia
+            <?php if ($tema_filter > 0):
+                $tn = '';
+                foreach ($tema_list as $t) { if ($t['id']==$tema_filter) { $tn=$t['judul']; break; } }
+            ?>
+            &mdash; <span style="color:#3f51b5">Tema: <?= htmlspecialchars($tn) ?></span>
+            <?php endif; ?>
+        </p>
         <div class="card-grid">
             <?php foreach ($moduls as $m): ?>
             <div class="card">
@@ -68,16 +88,19 @@ $total_all = $conn->query("SELECT COUNT(*) as c FROM modul WHERE status='publish
                     <?php endif; ?>
                 </div>
                 <div class="card-body">
-                    <span class="badge <?= badge_class($m['kategori_nama']) ?>"><?= htmlspecialchars($m['kategori_nama'] ?? '') ?></span>
+                    <?php if (!empty($m['tema_judul'])): ?>
+                    <a href="katalog.php?tema=<?= $m['tema_id'] ?>" class="badge badge-internal" style="text-decoration:none;display:inline-block;margin-bottom:8px">
+                        <?= htmlspecialchars($m['tema_judul']) ?>
+                    </a>
+                    <?php endif; ?>
                     <a href="detail.php?id=<?= $m['id'] ?>" class="card-title"><?= htmlspecialchars($m['judul']) ?></a>
                     <div class="card-meta">
-                        <span>&#128197; <?= date('d M Y', strtotime($m['tanggal'])) ?></span>
-                        <span>&#128100; <?= htmlspecialchars($m['instruktur']) ?></span>
-                        <span>&#128205; <?= htmlspecialchars($m['lokasi']) ?></span>
+                        <span><?= date('d/m/Y', strtotime($m['tanggal'])) ?></span>
+                        <span><?= htmlspecialchars($m['instruktur'] ?? '') ?></span>
+                        <span><?= htmlspecialchars($m['lokasi'] ?? '') ?></span>
                     </div>
                     <p class="card-desc"><?= htmlspecialchars($m['deskripsi']) ?></p>
                     <div class="card-footer">
-                        <span class="card-views">&#128065; <?= $m['views'] ?></span>
                         <a href="detail.php?id=<?= $m['id'] ?>" class="link-detail">Selengkapnya</a>
                     </div>
                 </div>
@@ -89,4 +112,17 @@ $total_all = $conn->query("SELECT COUNT(*) as c FROM modul WHERE status='publish
         </div>
     </div>
 </div>
+<script>
+function toggleFilter() {
+    const body = document.getElementById('filter-body');
+    const icon = document.getElementById('filter-icon');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    icon.textContent = isOpen ? '⌄' : '⌃';
+}
+if (window.innerWidth <= 768) {
+    document.getElementById('filter-body').style.display = 'none';
+    document.getElementById('filter-icon').textContent = '⌄';
+}
+</script>
 <?php require_once '../includes/footer.php'; ?>

@@ -13,8 +13,20 @@ $is_logged_in = isset($_SESSION['user_id']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Platform Pelatihan Digital - Diskominfo</title>
     <?php
-    $depth = substr_count(str_replace('\\','/',$_SERVER['PHP_SELF']), '/') - 2;
-    $base = str_repeat('../', max(0, $depth));
+    // Cara paling simple dan reliable untuk semua hosting
+    // Hitung berapa level script saat ini dari project root (folder yang berisi index.php)
+    $project_root = realpath(__DIR__ . '/..');
+    $script_dir   = realpath(dirname($_SERVER['SCRIPT_FILENAME']));
+    
+    if ($script_dir === $project_root) {
+        $base = '';
+    } else {
+        // Hitung perbedaan level antara script_dir dan project_root
+        $rel = str_replace(str_replace('\\','/',$project_root), '', str_replace('\\','/',$script_dir));
+        $rel = trim($rel, '/');
+        $depth = $rel ? count(explode('/', $rel)) : 0;
+        $base = str_repeat('../', $depth);
+    }
     ?>
     <link rel="stylesheet" href="<?= $base ?>assets/css/style.css">
 </head>
@@ -25,24 +37,59 @@ $is_logged_in = isset($_SESSION['user_id']);
             <img src="<?= $base ?>Lambang Kabupaten Bogor - 2025.png" alt="Logo Diskominfo" class="logo-img">
             <div class="logo-text">
                 <span class="logo-title">DISKOMINFO</span>
-                <span class="logo-sub">BOGOR</span>
+                <span class="logo-sub">KABUPATEN BOGOR</span>
             </div>
         </a>
         <ul class="nav-links">
-            <li><a href="<?= $base ?>index.php" class="<?= ($current_page == 'index.php') ? 'active' : '' ?>">Beranda</a></li>
-            <li><a href="<?= $base ?>pages/katalog.php" class="<?= ($current_page == 'katalog.php') ? 'active' : '' ?>">Katalog</a></li>
-            <li><a href="<?= $base ?>pages/tema.php" class="<?= ($current_page == 'tema.php') ? 'active' : '' ?>">Tema Pelatihan</a></li>
+            <li><a href="<?= $base ?>index.php" class="<?= $current_page=='index.php'?'active':'' ?>">Beranda</a></li>
+            <li><a href="<?= $base ?>pages/katalog.php" class="<?= $current_page=='katalog.php'?'active':'' ?>">Katalog</a></li>
+            <li><a href="<?= $base ?>pages/tema.php" class="<?= $current_page=='tema.php'?'active':'' ?>">Tema Pelatihan</a></li>
             <?php if ($is_admin): ?>
-            <li><a href="<?= $base ?>admin/panel.php" class="<?= (strpos($_SERVER['PHP_SELF'], 'admin') !== false) ? 'active' : '' ?>">Admin</a></li>
+            <li><a href="<?= $base ?>admin/panel.php" class="<?= strpos($_SERVER['PHP_SELF'],'admin')!==false?'active':'' ?>">Admin</a></li>
             <?php endif; ?>
         </ul>
         <div class="nav-auth">
             <?php if ($is_logged_in): ?>
                 <span class="user-email"><?= htmlspecialchars($_SESSION['email']) ?></span>
+                <a href="<?= $base ?>auth/ganti-password.php" class="btn-ganti-pass" title="Ganti Password">Ganti Sandi</a>
                 <a href="<?= $base ?>auth/logout.php" class="btn-logout">Keluar</a>
             <?php else: ?>
                 <a href="<?= $base ?>auth/login.php" class="btn-login">Masuk</a>
             <?php endif; ?>
         </div>
+        <!-- Hamburger -->
+        <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
     </div>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
+<div class="mobile-menu" id="mobile-menu">
+    <ul>
+        <li><a href="<?= $base ?>index.php" class="<?= $current_page=='index.php'?'active':'' ?>">Beranda</a></li>
+        <li><a href="<?= $base ?>pages/katalog.php" class="<?= $current_page=='katalog.php'?'active':'' ?>">Katalog</a></li>
+        <li><a href="<?= $base ?>pages/tema.php" class="<?= $current_page=='tema.php'?'active':'' ?>">Tema Pelatihan</a></li>
+        <?php if ($is_admin): ?>
+        <li><a href="<?= $base ?>admin/panel.php">Admin</a></li>
+        <?php endif; ?>
+    </ul>
+    <div class="mobile-auth">
+        <?php if ($is_logged_in): ?>
+            <span class="user-email"><?= htmlspecialchars($_SESSION['email']) ?></span>
+            <a href="<?= $base ?>auth/ganti-password.php" class="btn-ganti-pass"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Ganti Password</a>
+            <a href="<?= $base ?>auth/logout.php" class="btn-logout">Keluar</a>
+        <?php else: ?>
+            <a href="<?= $base ?>auth/login.php" class="btn-login">Masuk</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script>
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+    document.getElementById('mobile-overlay').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+}
+</script>

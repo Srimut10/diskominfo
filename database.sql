@@ -56,6 +56,8 @@ CREATE TABLE pendaftaran (
     email VARCHAR(100) NOT NULL,
     instansi VARCHAR(150),
     no_hp VARCHAR(20),
+    nik VARCHAR(20),
+    alamat TEXT,
     status ENUM('pending','approved','rejected') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (tema_id) REFERENCES tema_pelatihan(id) ON DELETE CASCADE,
