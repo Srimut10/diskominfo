@@ -13,22 +13,26 @@ $is_logged_in = isset($_SESSION['user_id']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Platform Pelatihan Digital - Diskominfo</title>
     <?php
-    // Cara paling simple dan reliable untuk semua hosting
-    // Hitung berapa level script saat ini dari project root (folder yang berisi index.php)
-    $project_root = realpath(__DIR__ . '/..');
-    $script_dir   = realpath(dirname($_SERVER['SCRIPT_FILENAME']));
-    $project_root_s = str_replace('\\','/',(string)$project_root);
-    $script_dir_s   = str_replace('\\','/',(string)$script_dir);
-
-    if (!$script_dir_s || !$project_root_s || $script_dir_s === $project_root_s) {
-        $base = '';
-    } else {
-        $rel = ltrim(str_replace($project_root_s, '', $script_dir_s), '/');
-        $depth = $rel ? count(array_filter(explode('/', $rel))) : 0;
-        $base = str_repeat('../', $depth);
-    }
+    // Cara paling reliable: gunakan path absolut dari server
+    // Ini bekerja di localhost maupun hosting tanpa perlu hitung depth
+    $project_root_real = str_replace('\\', '/', realpath(__DIR__ . '/..'));
+    $doc_root_real     = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
+    
+    // Path project relatif dari document root
+    $project_web_path = trim(str_replace($doc_root_real, '', $project_root_real), '/');
+    
+    // Base URL absolut ke project root
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host     = $_SERVER['HTTP_HOST'];
+    $base_url = $protocol . '://' . $host . ($project_web_path ? '/' . $project_web_path . '/' : '/');
+    
+    // Relative base (untuk link antar halaman)
+    $script_dir_real = str_replace('\\', '/', realpath(dirname($_SERVER['SCRIPT_FILENAME'])));
+    $rel = ltrim(str_replace($project_root_real, '', $script_dir_real), '/');
+    $depth = $rel ? count(array_filter(explode('/', $rel))) : 0;
+    $base = str_repeat('../', $depth);
     ?>
-    <link rel="stylesheet" href="<?= $base ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/style.css">
 </head>
 <body>
 <nav class="navbar">
