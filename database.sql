@@ -1,5 +1,4 @@
 -- Database: diskominfo_pelatihan
-CREATE DATABASE IF NOT EXISTS diskominfo_pelatihan CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE diskominfo_pelatihan;
 
 CREATE TABLE users (
