@@ -120,7 +120,9 @@ function badge_class($kat) {
         <?php if ($m['thumbnail']): ?>
             <img src="../<?= htmlspecialchars($m['thumbnail']) ?>" alt="<?= htmlspecialchars($m['judul']) ?>">
         <?php else: ?>
-            <img src="https://picsum.photos/seed/<?= $m['id'] ?>/900/320" alt="">
+            <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a237e 0%,#3f51b5 60%,#7986cb 100%);display:flex;align-items:center;justify-content:center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
         <?php endif; ?>
     </div>
 

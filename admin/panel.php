@@ -344,12 +344,6 @@ $total_users      = count($users);
         <div class="admin-nav-divider"></div>
         <li class="admin-nav-label">Sistem</li>
         <li>
-            <a href="quiz.php">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                Kelola Quiz
-            </a>
-        </li>
-        <li>
             <a href="?tab=pengguna" class="<?= $active_tab=='pengguna'?'active':'' ?>">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Pengguna
@@ -389,10 +383,6 @@ $total_users      = count($users);
         </div>
         <div class="admin-topbar-right">
             <?php if ($active_tab === 'modul'): ?>
-                <a href="quiz.php" class="btn-primary" style="background:#fff;color:#3f51b5;border:2px solid #3f51b5;box-shadow:none;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    Kelola Quiz
-                </a>
                 <button class="btn-primary" onclick="document.getElementById('modalTambahModul').classList.add('open')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     Modul Baru

@@ -212,14 +212,20 @@ if ($is_logged_in) {
 }
 ?>
 <div class="main-content">
-<div class="tema-page">
-    <div class="tema-header">
-        <h1>Tema Pelatihan</h1>
-        <p>Pilih dan daftarkan diri Anda pada tema pelatihan yang tersedia</p>
+
+<!-- TEMA HERO -->
+<section class="katalog-hero">
+    <div class="katalog-hero-inner">
+        <h1 class="animate-on-scroll">Tema Pelatihan</h1>
+        <p class="animate-on-scroll">Pilih dan daftarkan diri Anda pada tema pelatihan yang tersedia dari Diskominfo Kabupaten Bogor</p>
     </div>
+</section>
+
+<div class="tema-page" style="background:#f8f9ff;padding:40px 0">
+    <div style="max-width:1100px;margin:0 auto;padding:0 24px">
 
     <?php if ($msg): ?>
-    <div class="alert alert-<?= $msg_type==='success'?'success':'error' ?>" style="max-width:900px;margin:0 auto 20px">
+    <div class="alert alert-<?= $msg_type==='success'?'success':'error' ?>" style="margin-bottom:20px">
         <?= htmlspecialchars($msg) ?>
     </div>
     <?php endif; ?>
@@ -233,11 +239,12 @@ if ($is_logged_in) {
             $batas_batal = $sudah ? strtotime($pd['tema_tanggal']) - (3*86400) : 0;
             $bisa_batal  = $sudah && time() <= $batas_batal;
         ?>
-        <div class="tema-card">
+        <div class="tema-card animate-on-scroll">
             <div class="tema-thumb">
                 <?php if ($t['thumbnail']): ?>
                     <img src="../<?= htmlspecialchars($t['thumbnail']) ?>" alt="">
                 <?php else: ?>
+
                     <div class="tema-thumb-placeholder"></div>
                 <?php endif; ?>
                 <span class="tema-status-badge status-<?= $t['status'] ?>">
@@ -616,7 +623,15 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
         openModalDaftar(bukaId, window._temaMap[bukaId].judul);
     }
 })();
+
+// Scroll animation
+const obsT = new IntersectionObserver(e => {
+    e.forEach(en => { if(en.isIntersecting){en.target.classList.add('visible'); obsT.unobserve(en.target);} });
+},{threshold:0.08});
+document.querySelectorAll('.animate-on-scroll').forEach(el=>obsT.observe(el));
 </script>
 
 </div><!-- end main-content -->
+</div><!-- end tema inner -->
+</div><!-- end tema-page -->
 <?php require_once '../includes/footer.php'; ?>
