@@ -17,14 +17,14 @@ $is_logged_in = isset($_SESSION['user_id']);
     // Hitung berapa level script saat ini dari project root (folder yang berisi index.php)
     $project_root = realpath(__DIR__ . '/..');
     $script_dir   = realpath(dirname($_SERVER['SCRIPT_FILENAME']));
-    
-    if ($script_dir === $project_root) {
+    $project_root_s = str_replace('\\','/',(string)$project_root);
+    $script_dir_s   = str_replace('\\','/',(string)$script_dir);
+
+    if (!$script_dir_s || !$project_root_s || $script_dir_s === $project_root_s) {
         $base = '';
     } else {
-        // Hitung perbedaan level antara script_dir dan project_root
-        $rel = str_replace(str_replace('\\','/',$project_root), '', str_replace('\\','/',$script_dir));
-        $rel = trim($rel, '/');
-        $depth = $rel ? count(explode('/', $rel)) : 0;
+        $rel = ltrim(str_replace($project_root_s, '', $script_dir_s), '/');
+        $depth = $rel ? count(array_filter(explode('/', $rel))) : 0;
         $base = str_repeat('../', $depth);
     }
     ?>
