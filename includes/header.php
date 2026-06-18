@@ -5,6 +5,16 @@ require_once __DIR__ . '/../config/db.php';
 $current_page = basename($_SERVER['PHP_SELF']);
 $is_admin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 $is_logged_in = isset($_SESSION['user_id']);
+
+// Hitung base path — berapa level current script dari project root
+$pr = str_replace('\\','/', realpath(__DIR__ . '/..'));
+$sd = str_replace('\\','/', realpath(dirname($_SERVER['SCRIPT_FILENAME'])));
+if (!$pr || !$sd || $sd === $pr || strpos($sd, $pr) === false) {
+    $base = '';
+} else {
+    $under = trim(substr($sd, strlen($pr)), '/');
+    $base  = $under ? str_repeat('../', substr_count($under, '/') + 1) : '';
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -12,27 +22,7 @@ $is_logged_in = isset($_SESSION['user_id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Platform Pelatihan Digital - Diskominfo</title>
-    <?php
-    // Cara paling reliable: gunakan path absolut dari server
-    // Ini bekerja di localhost maupun hosting tanpa perlu hitung depth
-    $project_root_real = str_replace('\\', '/', realpath(__DIR__ . '/..'));
-    $doc_root_real     = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
-    
-    // Path project relatif dari document root
-    $project_web_path = trim(str_replace($doc_root_real, '', $project_root_real), '/');
-    
-    // Base URL absolut ke project root
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $host     = $_SERVER['HTTP_HOST'];
-    $base_url = $protocol . '://' . $host . ($project_web_path ? '/' . $project_web_path . '/' : '/');
-    
-    // Relative base (untuk link antar halaman)
-    $script_dir_real = str_replace('\\', '/', realpath(dirname($_SERVER['SCRIPT_FILENAME'])));
-    $rel = ltrim(str_replace($project_root_real, '', $script_dir_real), '/');
-    $depth = $rel ? count(array_filter(explode('/', $rel))) : 0;
-    $base = str_repeat('../', $depth);
-    ?>
-    <link rel="stylesheet" href="<?= $base_url ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= $base ?>assets/css/style.css">
 </head>
 <body>
 <nav class="navbar">
@@ -61,7 +51,6 @@ $is_logged_in = isset($_SESSION['user_id']);
                 <a href="<?= $base ?>auth/login.php" class="btn-login">Masuk</a>
             <?php endif; ?>
         </div>
-        <!-- Hamburger -->
         <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
             <span></span><span></span><span></span>
         </button>
