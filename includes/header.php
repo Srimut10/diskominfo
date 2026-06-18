@@ -36,6 +36,7 @@ if (!$pr || !$sd || $sd === $pr || strpos($sd, $pr) === false) {
         </a>
         <ul class="nav-links">
             <li><a href="<?= $base ?>index.php" class="<?= $current_page=='index.php'?'active':'' ?>">Beranda</a></li>
+            <li><a href="<?= $base ?>pages/tentang.php" class="<?= $current_page=='tentang.php'?'active':'' ?>">Tentang Kami</a></li>
             <li><a href="<?= $base ?>pages/katalog.php" class="<?= $current_page=='katalog.php'?'active':'' ?>">Katalog</a></li>
             <li><a href="<?= $base ?>pages/tema.php" class="<?= $current_page=='tema.php'?'active':'' ?>">Tema Pelatihan</a></li>
             <?php if ($is_admin): ?>
@@ -62,6 +63,7 @@ if (!$pr || !$sd || $sd === $pr || strpos($sd, $pr) === false) {
 <div class="mobile-menu" id="mobile-menu">
     <ul>
         <li><a href="<?= $base ?>index.php" class="<?= $current_page=='index.php'?'active':'' ?>">Beranda</a></li>
+        <li><a href="<?= $base ?>pages/tentang.php" class="<?= $current_page=='tentang.php'?'active':'' ?>">Tentang Kami</a></li>
         <li><a href="<?= $base ?>pages/katalog.php" class="<?= $current_page=='katalog.php'?'active':'' ?>">Katalog</a></li>
         <li><a href="<?= $base ?>pages/tema.php" class="<?= $current_page=='tema.php'?'active':'' ?>">Tema Pelatihan</a></li>
         <?php if ($is_admin): ?>

@@ -13,7 +13,6 @@ $kontens = $conn->query("SELECT * FROM konten_beranda WHERE status='published' O
 // Stats
 $stat_modul   = $conn->query("SELECT COUNT(*) as c FROM modul WHERE status='published'")->fetch_assoc()['c'];
 $stat_tema    = $conn->query("SELECT COUNT(*) as c FROM tema_pelatihan WHERE status='open'")->fetch_assoc()['c'];
-$stat_peserta = $conn->query("SELECT COUNT(*) as c FROM pendaftaran WHERE cancelled_at IS NULL")->fetch_assoc()['c'];
 
 // Modul terbaru
 $moduls = $conn->query("SELECT m.* FROM modul m WHERE m.status='published' ORDER BY m.created_at DESC LIMIT 6")->fetch_all(MYSQLI_ASSOC);
@@ -42,26 +41,6 @@ $moduls = $conn->query("SELECT m.* FROM modul m WHERE m.status='published' ORDER
     </div>
     <div class="hero-scroll-indicator">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-</section>
-
-<!-- ===== STAT COUNTER ===== -->
-<section class="stat-counter-section">
-    <div class="stat-counter-inner">
-        <div class="stat-counter-item animate-on-scroll">
-            <div class="stat-counter-num" data-target="<?= $stat_peserta ?>">0</div>
-            <div class="stat-counter-label">Peserta Terdaftar</div>
-        </div>
-        <div class="stat-counter-divider"></div>
-        <div class="stat-counter-item animate-on-scroll">
-            <div class="stat-counter-num" data-target="<?= $stat_modul ?>">0</div>
-            <div class="stat-counter-label">Modul Pelatihan</div>
-        </div>
-        <div class="stat-counter-divider"></div>
-        <div class="stat-counter-item animate-on-scroll">
-            <div class="stat-counter-num" data-target="<?= $stat_tema ?>">0</div>
-            <div class="stat-counter-label">Tema Aktif</div>
-        </div>
     </div>
 </section>
 

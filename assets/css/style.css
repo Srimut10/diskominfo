@@ -1409,65 +1409,389 @@ textarea.form-control { width: 100%; padding: 10px 14px; border: 1px solid #ddd;
 }
 
 /* ===================================================
-   FOOTER BARU
+   FOOTER BARU — dominan putih, aksen biru soft
    =================================================== */
 .site-footer {
-    background: #0d1b5e;
-    color: rgba(255,255,255,.75);
+    background: #fff !important;
+    color: #555;
+    border-top: 3px solid #e8eaf6;
     margin-top: 0;
 }
 .footer-main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 28px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 28px 24px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 32px;
-    flex-wrap: wrap;
+    align-items: center;
 }
 .footer-brand {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: 16px;
 }
 .footer-brand-name {
     font-size: 15px;
     font-weight: 800;
-    color: #fff;
+    color: #1a237e;
     letter-spacing: 1px;
     line-height: 1.2;
 }
 .footer-brand-sub {
     font-size: 11px;
-    color: rgba(255,255,255,.5);
+    color: #888;
 }
-.footer-contact ul {
+.footer-desc {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.7;
+    max-width: 260px;
+}
+.footer-col-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 16px;
+}
+.footer-nav-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    text-align: right;
+    gap: 10px;
 }
-.footer-contact ul li {
+.footer-nav-list a {
     font-size: 13px;
-    color: rgba(255,255,255,.65);
+    color: #555;
+    text-decoration: none;
+    transition: color .2s;
+}
+.footer-nav-list a:hover { color: #3f51b5; }
+.footer-contact-list {
+    list-style: none;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 7px;
+    flex-direction: column;
+    gap: 12px;
+    justify-self: end;
+}
+.footer-contact-list li {
+    font-size: 13px;
+    color: #555;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+}
+.footer-contact-list .icon {
+    color: #3f51b5;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,.1);
+    border-top: 1px solid #e8eaf6;
     text-align: center;
     padding: 12px 24px;
     font-size: 12px;
-    color: rgba(255,255,255,.4);
+    color: #aaa;
+    background: #f0f4ff;
 }
-@media (max-width: 600px) {
-    .footer-main { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .footer-contact ul { text-align: left; }
-    .footer-contact ul li { justify-content: flex-start; }
+@media (max-width: 900px) {
+    .footer-main { grid-template-columns: 1fr; gap: 20px; padding: 24px 20px 16px; }
+}
+@media (max-width: 560px) {
+    .footer-main { grid-template-columns: 1fr; gap: 16px; padding: 20px 16px 14px; }
+    .footer-desc { max-width: 100%; }
+}
+
+/* ===================================================
+   TENTANG KAMI PAGE
+   =================================================== */
+
+/* Breadcrumb */
+.breadcrumb-bar {
+    background: #f8f9ff;
+    border-bottom: 1px solid #e8eaf6;
+    padding: 12px 0;
+}
+.breadcrumb-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #888;
+}
+.breadcrumb-inner a { color: #3f51b5; text-decoration: none; }
+.breadcrumb-inner a:hover { text-decoration: underline; }
+.breadcrumb-inner span { color: #333; font-weight: 500; }
+
+/* Hero Tentang */
+.tentang-hero {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3f51b5 100%);
+    padding: 80px 24px;
+    color: #fff;
+}
+.tentang-hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: center;
+}
+.tentang-hero-text h1 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 12px 0 20px;
+}
+.tentang-hero-text h1 span { color: rgba(255,255,255,.8); }
+.tentang-hero-text p {
+    font-size: 16px;
+    opacity: .85;
+    line-height: 1.7;
+    max-width: 520px;
+}
+.tentang-hero-img-wrap {
+    width: 180px;
+    height: 180px;
+    background: rgba(255,255,255,.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.tentang-hero-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.3));
+}
+@media (max-width: 768px) {
+    .tentang-hero { padding: 56px 20px; }
+    .tentang-hero-inner { grid-template-columns: 1fr; gap: 28px; }
+    .tentang-hero-img { display: none; }
+    .tentang-hero-text h1 { font-size: 26px; }
+}
+
+/* Visi Misi */
+.tentang-visimisi-section {
+    padding: 72px 0;
+    background: #f8f9ff;
+}
+.tentang-visimisi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+}
+.tentang-visimisi-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 32px;
+    box-shadow: 0 2px 12px rgba(26,35,126,.07);
+    border-top: 4px solid #3f51b5;
+}
+.tentang-visimisi-icon {
+    width: 56px;
+    height: 56px;
+    background: #e8eaf6;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3f51b5;
+    margin-bottom: 20px;
+}
+.tentang-visimisi-icon svg { width: 26px; height: 26px; }
+.tentang-visimisi-card h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a237e;
+    margin-bottom: 14px;
+}
+.tentang-visimisi-card p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.75;
+}
+.tentang-visimisi-card ul {
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.tentang-visimisi-card ul li {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+@media (max-width: 768px) {
+    .tentang-visimisi-grid { grid-template-columns: 1fr; }
+    .tentang-visimisi-card { padding: 24px 20px; }
+}
+
+/* Tujuan */
+.tentang-tujuan-section {
+    padding: 72px 0;
+    background: #fff;
+}
+.tentang-tujuan-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+}
+.tentang-tujuan-text p { font-size: 14px; color: #555; line-height: 1.8; }
+.tentang-goal-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.tentang-goal-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px 20px;
+    background: #f8f9ff;
+    border-radius: 12px;
+    border-left: 4px solid #3f51b5;
+}
+.tentang-goal-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: #3f51b5;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+    opacity: .6;
+}
+.tentang-goal-item > div:last-child { font-size: 14px; color: #444; line-height: 1.65; }
+@media (max-width: 768px) {
+    .tentang-tujuan-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* Fitur Unggulan */
+.tentang-fitur-section {
+    padding: 72px 0;
+    background: #f8f9ff;
+}
+.tentang-fitur-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+.tentang-fitur-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 24px;
+    box-shadow: 0 2px 12px rgba(26,35,126,.06);
+    transition: transform .25s, box-shadow .25s;
+}
+.tentang-fitur-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(26,35,126,.12);
+}
+.tentang-fitur-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+}
+.tentang-fitur-icon.blue   { background: #e8eaf6; color: #3f51b5; }
+.tentang-fitur-icon.green  { background: #e8f5e9; color: #2e7d32; }
+.tentang-fitur-icon.orange { background: #fff3e0; color: #e65100; }
+.tentang-fitur-icon.purple { background: #f3e5f5; color: #7b1fa2; }
+.tentang-fitur-icon.teal   { background: #e0f2f1; color: #00695c; }
+.tentang-fitur-icon.pink   { background: #fce4ec; color: #c2185b; }
+.tentang-fitur-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 10px;
+}
+.tentang-fitur-card p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.7;
+}
+
+/* Penyelenggara */
+.tentang-penyelenggara-section {
+    padding: 72px 0;
+    background: #fff;
+}
+.tentang-penyelenggara-inner {
+    background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
+    border-radius: 20px;
+    padding: 48px 40px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 48px;
+    align-items: center;
+}
+.tentang-penyelenggara-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+.tentang-penyelenggara-logo img {
+    height: 140px;
+    width: auto;
+    object-fit: contain;
+}
+.tentang-penyelenggara-info h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a237e;
+    margin: 12px 0 16px;
+    line-height: 1.3;
+}
+.tentang-penyelenggara-info p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.75;
+    margin-bottom: 20px;
+}
+.tentang-kontak-list { display: flex; flex-direction: column; gap: 10px; }
+.tentang-kontak-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #444;
+}
+.tentang-kontak-item .icon { color: #3f51b5; flex-shrink: 0; margin-top: 2px; }
+@media (max-width: 768px) {
+    .tentang-penyelenggara-inner { grid-template-columns: 1fr; text-align: center; padding: 32px 20px; gap: 24px; }
+    .tentang-kontak-item { justify-content: center; }
+}
+
+/* CTA Tentang */
+.tentang-cta-section {
+    background: linear-gradient(135deg, #1a237e 0%, #3f51b5 100%);
+    padding: 72px 24px;
+    text-align: center;
+    color: #fff;
+}
+.tentang-cta-inner { max-width: 600px; margin: 0 auto; }
+.tentang-cta-inner h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+.tentang-cta-inner p { font-size: 15px; opacity: .85; margin-bottom: 32px; line-height: 1.7; }
+.tentang-cta-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+@media (max-width: 480px) {
+    .tentang-cta-inner h2 { font-size: 22px; }
+    .tentang-cta-btns { flex-direction: column; align-items: center; }
 }
 
 /* ===================================================

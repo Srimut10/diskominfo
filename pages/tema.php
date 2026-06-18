@@ -180,8 +180,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS tema_form_settings (
     req_kecamatan TINYINT DEFAULT 1,
     req_doc_ktp TINYINT DEFAULT 0,
     req_doc_npwp TINYINT DEFAULT 0,
-    req_doc_rekening TINYINT DEFAULT 0,
-    FOREIGN KEY (tema_id) REFERENCES tema_pelatihan(id) ON DELETE CASCADE
+    req_doc_rekening TINYINT DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
 // Ambil semua tema beserta modul terkait
